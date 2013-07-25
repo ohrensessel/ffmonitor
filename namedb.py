@@ -1,3 +1,23 @@
+#!/usr/bin/env python
+#
+# ffmonitor - a monitoring tool for freifunk networks
+# Copyright (C) 2013  Leo Krueger
+# 
+# This file is part of ffmonitor.
+#
+# ffmonitor is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ffmonitor is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with ffmonitor.  If not, see <http://www.gnu.org/licenses/>.
+#
 from configuration import config
 import logging
 import atexit
@@ -55,6 +75,8 @@ def save_name(clean_id, name):
 
 def init_read():
     """initializes the database for reading only"""
+    global name_db
+
     try:
         with open(config.get('data', 'namedb'), 'r') as fp:
             global name_db
