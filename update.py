@@ -78,12 +78,12 @@ for node in nodes:
         num_clients += 1
 
     else:
+        clean_id = get_clean_id(node['id'])
+        namedb.save_name(clean_id, node['name']) 
+
         # gateways and nodes are treated equally
         if flags['online']:
-            clean_id = get_clean_id(node['id'])
-            
             rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
-            namedb.save_name(clean_id, node['name'])
 
             # is a gateway
             if flags['gateway']:
@@ -99,7 +99,7 @@ for node in nodes:
         else:
             # delete rrd files for nodes offline > 1 month?
             # create rrd file for nodes never seen before?
-            #check_offline_node()
+            rrd.check_offline_node(clean_id)
 
             if flags['gateway']:
                 num_gateways_off += 1            

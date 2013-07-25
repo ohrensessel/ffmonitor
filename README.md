@@ -24,6 +24,8 @@ Features
 Installation
 ------------
 Create a monitor.conf file (on the basis of monitor.conf.dist).
+Adapt the path to your conf file in configuration.py (better solution to come),
+use the full path.
 
 update.py should be run every minute via cron
 (the interval is not configurable at the moment)

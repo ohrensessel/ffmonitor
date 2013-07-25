@@ -52,7 +52,7 @@ def get_name(clean_id):
 
     """
     if clean_id in name_db:
-        return name_db['clean_id']
+        return name_db[clean_id]
 
     else:
         return ':'.join(clean_id[i:i+2] for i in xrange(0, len(clean_id), 2))
@@ -66,7 +66,7 @@ def save_name(clean_id, name):
         
     """
     # empty names are disregarded
-    if len(name) == 0:
+    if len(name) == 0 or len(clean_id) == 0:
         return
 
     global name_db

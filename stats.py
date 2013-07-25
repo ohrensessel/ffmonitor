@@ -76,7 +76,7 @@ for rrd_file in rrd_files:
     
     # offset takes data points into account that are unknown because of
     # e.g. server failure
-    if total - offset >= 0:
+    if (total - offset) <= 0:
         offline[file_name] = 0
     
     else:

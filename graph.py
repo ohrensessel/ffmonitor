@@ -119,7 +119,7 @@ for rrd_file in rrd_files:
         defs = get_def(rrd_file, node_defs)
         lines = node_lines
         
-        title = 'node {}'.format(namedb.get_name(rrd_file))
+        title = 'node {}'.format(namedb.get_name(file_name))
         vlabel = '# connections'
 
     else: # total graph
@@ -135,7 +135,7 @@ for rrd_file in rrd_files:
     for range_name, range_duration  in gen_graphs.iteritems():
         complete_title = ''.join([title, ' - by ', range_name])
         
-        img_name = '_'.join([img_base_name, '.png'])
+        img_name = ''.join([img_base_name, '_', range_name, '.png'])
         
         rrdtool.graph(img_name,
                 '--title', complete_title,

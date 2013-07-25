@@ -22,5 +22,5 @@ import ConfigParser
 
 
 config = ConfigParser.RawConfigParser();
-config.read('monitor.conf')
+config.read('/etc/monitor.conf')
 
