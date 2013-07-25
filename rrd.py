@@ -107,10 +107,3 @@ def update_total(date, num_nodes, num_clients, num_gateways, num_nodes_off,
     _update(ds_total, 'total', date, num_nodes, num_clients, num_gateways,
               num_nodes_off, num_nodes_geo, num_nodes_geo_off)
 
-
-def check_offline_node(clean_id):
-    """further functionality to follow"""
-    filename = ''.join([rrd_path, clean_id, '.rrd'])
-    # ensure rrd file existence
-    _create_rrd(filename, ds_nodes)
-
