@@ -18,8 +18,10 @@ Features
 - [x] Graph the overall network/mesh size.
 - [x] Rough calculation of offline statistics for each node.
 - [x] Multiple data source urls for fallback on errors.
-- [x] Only new data is pulled from the freifunk server and saved.
+- [x] Only new data is pulled from the Freifunk server and saved.
 - [x] Human readable names of the nodes are saved.
+- [ ] Handling of nodes that forever vanished from the network (delete rrd file, ...)
+- [ ] Consider batman-adv timeouts when calculating number of clients
 
 Installation
 ------------

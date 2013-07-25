@@ -78,9 +78,6 @@ for node in nodes:
         num_clients += 1
 
     else:
-        clean_id = get_clean_id(node['id'])
-        namedb.save_name(clean_id, node['name']) 
-
         # gateways and nodes are treated equally
         if flags['online']:
             clean_id = get_clean_id(node['id'])
