@@ -1,0 +1,3 @@
+[submodule "retry"]
+	path = retry
+	url = git@github.com:saltycrane/retry-decorator.git

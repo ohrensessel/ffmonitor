@@ -1,0 +1,27 @@
+[data]
+# stores last modified info about the nodes.json file
+lastmodified = /tmp/ffhh.date
+# file to store the mapping between ids and node names
+# also readable by webserver
+namedb = /var/lib/ffhh/namedb.json
+
+[dataurl]
+# multiple urls possible
+# url1 is tried first, others successively on error
+url1 = http://freifunk-gw01.hamburg.ccc.de/ffhhmap/nodes.json
+url2 = http://graph.hamburg.freifunk.net/nodes.json
+
+[rrd]
+daemon = unix:/var/run/rrdcached.sock
+# folder to store rrd files
+path = /var/lib/ffhh/
+
+[graph]
+# folder to store the generated graphs
+# also readable by webserver
+path = /var/lib/ffhh/graphs/
+
+[stats]
+# file to store the offline stats
+# also readable by webserver
+path = /var/lib/ffhh/stats.txt

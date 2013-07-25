@@ -1,23 +1,16 @@
 #!/usr/bin/python
-from __future__ import print_function
-import logging
-import json
-from helpers import *
 
-# --------
-# see helpers.py for config options
-# --------
+import namedb
+import data
+import rrd
+import log
 
-handler = logging.FileHandler('update.log', 'a') 
-format = logging.Formatter('%(asctime)s %(levelname)s: %(message)s') 
-handler.setFormatter(format)
 
-logger = logging.getLogger() 
-logger.addHandler(handler)
-
+logger = log.init_custom_logger('monitor')
+namedb.init()
 
 # get (new) json data from ff server
-data = json.loads(getFFData())
+data, date = data.get_ff_data()
 
 links = data['links']
 nodes = data['nodes']
@@ -54,8 +47,9 @@ num_nodes_geo_off = 0
 
 
 def get_clean_id(id):
-    # removes colons from node id
-    return id.replace(':', '')
+# removes colons from node id
+    
+    return str(id.replace(':', ''))
 
 
 for node in nodes:
@@ -70,9 +64,8 @@ for node in nodes:
         if flags['online']:
             clean_id = get_clean_id(node['id'])
             
-            #update_rrd_node(clean_id, node['client'], node['wifilink'], node['vpn'])
-            print(clean_id,  node['client'], node['wifilink'], node['vpn'])
-            #save_name(clean_id, node['name'])
+            rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
+            namedb.save_name(clean_id, node['name'])
 
             # is a gateway
             if flags['gateway']:
@@ -103,6 +96,5 @@ for node in nodes:
 # nodes are no clients
 num_clients -= num_nodes
 
-print(num_nodes, num_clients, num_gateways, num_nodes_off, num_nodes_geo, num_nodes_geo_off)
-#update_rrd_total(num_nodes, num_clients, num_gateways, num_nodes_off, num_nodes_geo, num_nodes_geo_off)
+rrd.update_total(date, num_nodes, num_clients, num_gateways, num_nodes_off, num_nodes_geo, num_nodes_geo_off)
 
