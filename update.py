@@ -83,7 +83,6 @@ for node in nodes:
             clean_id = get_clean_id(node['id'])
 
             namedb.save_name(clean_id, node['name'])
-            rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
 
             # is a gateway
             if flags['gateway']:
@@ -93,8 +92,15 @@ for node in nodes:
             else:
                 num_nodes += 1
 
+                # decrease number of clients by one,
+                # as the node itself is also counted as its client
+                if node['client'] > 0:
+                    node['client'] -= 1
+
                 if not node['geo'] is None:
                     num_nodes_geo += 1          
+
+            rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
 
         else:
             # delete rrd files for nodes offline > 1 month?
