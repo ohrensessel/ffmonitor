@@ -37,8 +37,12 @@ stats.py could be run every hour via cron
 (or any other interval if you think that is more suitable)
 
 
-Requirements (probably incomplete at the moment)
+Requirements
 ------------------------------------------------
+(probably incomplete at the moment)
+
 rrdtool must be installed, along with the python rrdtool module.
+
 The rrdcached daemon should be used to avoid high I/O when updating the rrd files (by update.py).
+
 The python Requests module [http://docs.python-requests.org/en/latest/] must be installed.
