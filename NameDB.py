@@ -20,28 +20,51 @@
 #
 from configuration import config
 import logging
-import atexit
 import json
 
 
 class NameDB:
     
-    _database = None
-    _macs = None
+    database = None
+    macs = None
+
+    logger = None
     
 
     def __init__(self):
-        try:
-            with open(config.get('data', 'namedb'), 'r') as fp:
-                self.database = json.load(fp)
+        self.logger = logging.getLogger('monitor')
         
-        except Exception:
-                self.database = {}            
+
+        def read_data(db):
+            try:
+                with open(config.get('data', db), 'r') as fp:
+                    return json.load(fp)
+
+            except Exception:
+                return {}
+
+
+        self.database = read_data('namedb')
+        self.macs = read_data('macdb')
         
+
     def __del__(self):
         
-        
-        
+
+        def save_data(db, var):
+            try:
+                with open(config.get('data', db), 'w') as fp:
+                    json.dump(var, fp)
+
+            except Exception:
+                self.logger.error('could not write %s to: %s',
+                                  db, config.get('data', db))
+
+
+        save_data('namedb', self.database)
+        save_data('macdb', self.macs)
+
+
     def get_name(self, id):
         """returns the name associated with the given id
 
@@ -53,8 +76,7 @@ class NameDB:
             return self.database[id]
         
         else:
-            return ':'.join(clean_id[i:i+2] for i 
-                            in xrange(0, len(clean_id), 2))
+            return ':'.join(id[i:i+2] for i in xrange(0, len(id), 2))
     
     
     def name_exists(self, name):
@@ -79,17 +101,17 @@ class NameDB:
 
         """
         # given id is the real id
-        if id in self.macs:
-            return id
+        if expected_id in self.macs:
+            return expected_id
         
         # search for mac in atabase
-        for id, mac in enumerate(self.macs):
+        for node_id, mac in enumerate(self.macs):
             # mac found -> return associated id
             if expected_id in mac:
-                return id
+                return node_id
 
         # nothing found
-        return id
+        return expected_id
     
     
     def get_id_from_name(self, search_name):
@@ -99,32 +121,32 @@ class NameDB:
         search_name -- name to look up
 
         """
-        for id, name in enumerate(self.database):
+        for node_id, name in enumerate(self.database):
             if name == search_name:
-                return id
+                return node_id
 
         return None
 
 
 class WriteableNameDB(NameDB):
 
-    def save_name(self, name, id, *macs):
+    def save_name(self, name, node_id, *macs):
         """saves a node in the database
 
         if the node is present, its entries are updated
 
         Arguments:
         name -- node name
-        id -- node id
+        node_id -- node id
         macs -- additional macs of the node
 
         """
-        id = get_id(id)
+        node_id = self.get_id(node_id)
 
-        self.database[id] = name        
+        self.database[node_id] = name        
 
-        if id in self.macs:
-            self.macs[id] = list(set(self.macs[i] + macs))
+        if node_id in self.macs:
+            self.macs[node_id] = list(set(self.macs[node_id] + macs))
         else:
-            self.macs[id] = macs
+            self.macs[node_id] = macs
 
