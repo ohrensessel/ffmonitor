@@ -26,9 +26,9 @@ import json
 
 class NameDB:
     
-    database = None
-    macs = None
-
+    _database = None
+    _macs = None
+    
 
     def __init__(self):
         try:
@@ -38,8 +38,11 @@ class NameDB:
         except Exception:
                 self.database = {}            
         
-
-    def get_name(id):
+    def __del__(self):
+        
+        
+        
+    def get_name(self, id):
         """returns the name associated with the given id
 
         Arguments:
@@ -49,13 +52,13 @@ class NameDB:
         if id in self.database:
             return self.database[id]
         
-        else
+        else:
             return ':'.join(clean_id[i:i+2] for i 
                             in xrange(0, len(clean_id), 2))
     
     
-    def name_exists(name):
-        """´checks whether a name exists in the database
+    def name_exists(self, name):
+        """checks whether a name exists in the database
 
         Arguments:
         name -- name to look up
@@ -68,7 +71,7 @@ class NameDB:
         return False
 
 
-    def get_id(expected_id):
+    def get_id(self, expected_id):
         """returns the id to a given mac adress
 
         Arguments:
@@ -76,7 +79,7 @@ class NameDB:
 
         """
         # given id is the real id
-        if id in self.macs
+        if id in self.macs:
             return id
         
         # search for mac in atabase
@@ -89,7 +92,7 @@ class NameDB:
         return id
     
     
-    def get_id_from_name(search_name):
+    def get_id_from_name(self, search_name):
         """returns the id to a given name
 
         Arguments:
@@ -105,7 +108,7 @@ class NameDB:
 
 class WriteableNameDB(NameDB):
 
-    def save_name(name, id, *macs):
+    def save_name(self, name, id, *macs):
         """saves a node in the database
 
         if the node is present, its entries are updated
