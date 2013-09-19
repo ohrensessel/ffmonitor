@@ -22,12 +22,12 @@ from __future__ import print_function
 from configuration import config
 import logging
 import rrdtool
-import namedb
+from NameDB import NameDB
 import os
 
 
 logger = logging.getLogger('monitor')
-namedb.init_read()
+namedb = NameDB()
 
 daemon = config.get('rrd', 'daemon')
 graph_path = config.get('graph', 'path')
@@ -112,10 +112,14 @@ for rrd_file in rrd_files:
 
     # there may be other files in the directory    
     if not file_ext == '.rrd':
-        continue
-    
+        continue   
+ 
     # handle nodes and mesh size (total) graph separately
     if not file_name == 'total': # node graph
+        # only graph node ids, not macs
+        if not namedb.is_id(file_name):
+            continue
+
         defs = get_def(rrd_file, node_defs)
         lines = node_lines
         

@@ -18,14 +18,15 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ffmonitor.  If not, see <http://www.gnu.org/licenses/>.
 #
-import namedb
+from NameDB import WriteableNameDB
 import data
 import rrd
 import log
 
 
 logger = log.init_custom_logger('monitor')
-namedb.init()
+namedb = WriteableNameDB()
+
 
 # get (new) json data from ff server
 data, date = data.get_ff_data()
@@ -81,8 +82,9 @@ for node in nodes:
         # gateways and nodes are treated equally
         if flags['online']:
             clean_id = get_clean_id(node['id'])
+            clean_id = namedb.get_id(clean_id)
 
-            namedb.save_name(clean_id, node['name'])
+            namedb.save_name(node['name'], clean_id, node['macs'])
 
             # is a gateway
             if flags['gateway']:
