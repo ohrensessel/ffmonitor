@@ -40,6 +40,13 @@ in parallel with update.py.
 stats.py could be run every hour via cron
 (or any other interval if you think that is more suitable)
 
+Here are some example crontab entries:
+```
+*/1 * * * * <path>/update.py >> <pathtosomelogdir>/update.log 2>&1
+*/5 * * * * sleep 30 && <path>/graph.py >> <pathtosomelogdir>/graph.log 2>&1
+3   * * * * <path>/stats.py >> <pathtosomelogdir>/stats.log 2>&1
+```
+
 
 Requirements
 ------------------------------------------------
