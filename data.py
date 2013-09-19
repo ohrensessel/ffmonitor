@@ -20,16 +20,18 @@
 #
 from wsgiref.handlers import format_date_time
 from datetime import datetime
-from functools import wraps
 from time import mktime
 import email.utils
 import requests
 import logging
 import pickle
+import sys
 
 from configuration import config
-from retry.decorators import *
-
+# this is a bit ugly, any better solution?
+# retry-decorators github repo does not contain __init__.py file
+sys.path.insert(0, '/home/leo/working/ffmonitor/retry')
+from decorators import retry
 
 logger = logging.getLogger('monitor')
 

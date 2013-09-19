@@ -18,14 +18,15 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with ffmonitor.  If not, see <http://www.gnu.org/licenses/>.
 #
-import namedb
+from NameDB import WriteableNameDB
 import data
 import rrd
 import log
 
 
 logger = log.init_custom_logger('monitor')
-namedb.init()
+namedb = WriteableNameDB()
+
 
 # get (new) json data from ff server
 data, date = data.get_ff_data()
@@ -81,9 +82,9 @@ for node in nodes:
         # gateways and nodes are treated equally
         if flags['online']:
             clean_id = get_clean_id(node['id'])
+            clean_id = namedb.get_id(clean_id)
 
-            namedb.save_name(clean_id, node['name'])
-            rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
+            namedb.save_name(node['name'], clean_id, node['macs'])
 
             # is a gateway
             if flags['gateway']:
@@ -93,8 +94,15 @@ for node in nodes:
             else:
                 num_nodes += 1
 
+                # decrease number of clients by one,
+                # as the node itself is also counted as its client
+                if node['client'] > 0:
+                    node['client'] -= 1
+
                 if not node['geo'] is None:
                     num_nodes_geo += 1          
+
+            rrd.update_node(clean_id, date, node['client'], node['wifilink'], node['vpn'])
 
         else:
             # delete rrd files for nodes offline > 1 month?

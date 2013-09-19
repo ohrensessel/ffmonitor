@@ -76,11 +76,15 @@ for rrd_file in rrd_files:
     
     # offset takes data points into account that are unknown because of
     # e.g. server failure
-    if (total - offset) <= 0:
+    if (total - offset) < 0:
         offline[file_name] = 0
     
     else:
         offline[file_name] = (float(unknown - offset) / (total - offset)) * 100
+        
+        # stat sometimes is negative (close to zero), catch that error
+        if offline[file_name] < 0:
+            offline[file_name] = 0
 
 # sort data so that it can be directly used by php
 offline = sorted(offline.iteritems(), key=itemgetter(1), reverse=True)
