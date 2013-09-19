@@ -104,15 +104,29 @@ class NameDB:
         if expected_id in self.macs:
             return expected_id
         
-        # search for mac in atabase
-        for node_id, mac in enumerate(self.macs):
+        # search for mac in database
+        for node_id in self.macs:
             # mac found -> return associated id
-            if expected_id in mac:
-                return node_id
+            for mac in self.macs[node_id]:
+                if expected_id in mac:
+                    return node_id
 
         # nothing found
         return expected_id
-    
+ 
+
+    def is_id(self, expected_id):
+        """checks wether a given mac is an id
+        
+        Arguments:
+        expected_id -- mac which is expected to be the id
+
+        """
+        if expected_id == self.get_id(expected_id):
+            return True
+        else:
+            return False
+  
     
     def get_id_from_name(self, search_name):
         """returns the id to a given name
@@ -144,7 +158,10 @@ class WriteableNameDB(NameDB):
         node_id = self.get_id(node_id)
 
         self.database[node_id] = name        
-
+        
+        macs = list(macs)
+        macs = [str(x.replace(':', '')) for x in macs]
+        
         if node_id in self.macs:
             self.macs[node_id] = list(set(self.macs[node_id] + macs))
         else:
