@@ -71,13 +71,13 @@ rrd_path = config.get('rrd', 'path')
 # save data to rrd files
 def _update(data_src, clean_id, *args):
     filename = ''.join([rrd_path, clean_id, '.rrd'])
+    filename = filename.encode('ascii', 'ignore')
     
     # ensure rrd file existence
     _create_rrd(filename, data_src)
 
     # concatenate date and values
     update_str = ':'.join([str(value) for value in args])
-     
     rrdtool.update(filename,
                    '--daemon', daemon,
                    update_str)
