@@ -123,7 +123,7 @@ for rrd_file in rrd_files:
         defs = get_def(rrd_file, node_defs)
         lines = node_lines
         
-        title = 'node {}'.format(namedb.get_name(file_name))
+        title = 'node {}'.format(namedb.get_name(file_name).encode('ascii', 'ignore'))
         vlabel = '# connections'
 
     else: # total graph

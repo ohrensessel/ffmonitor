@@ -21,7 +21,7 @@
 from configuration import config
 import logging
 import json
-
+import re
 
 class NameDB:
     
@@ -87,7 +87,7 @@ class NameDB:
 
         """        
         for entry in self.database:
-            if entry == name:
+            if self.database[entry] == name:
                 return True
 
         return False
@@ -141,6 +141,16 @@ class NameDB:
 
         return None
 
+    def get_match(self, reg):
+        """returns the id of node names matching the given regular expression
+
+        Arguments:
+        reg -- regular expression to match
+
+        """
+        red = redict(zip(self.database.values(), self.database.keys()))
+        return red[reg]
+
 
 class WriteableNameDB(NameDB):
 
@@ -167,3 +177,13 @@ class WriteableNameDB(NameDB):
         else:
             self.macs[node_id] = macs
 
+
+class redict(dict):
+    def __init__(self, d):
+        dict.__init__(self, d)
+
+    def __getitem__(self, regex):
+        r = re.compile(regex)
+        mkeys = filter(r.match, self.keys())
+        for i in mkeys:
+                yield dict.__getitem__(self, i)
